@@ -1,13 +1,18 @@
 import { useForm } from "react-hook-form";
+import Errors from "./Error";
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
-  const {register, handleSubmit, formState:{errors}} = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  console.log(errors);
 
-const onSubmit=()=>{
-  console.log('enviando...');
-  
-}
+  const onSubmit = () => {
+    console.log("enviando...");
+  };
   return (
     <div className="md:w-1/2 lg:w-2/5 mx-5">
       <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
@@ -28,12 +33,9 @@ const onSubmit=()=>{
             type="text"
             placeholder="Nombre del Paciente"
             /* hook-form */
-            {...register('name', 
-              {required:'El nombre del paciente es obligatorio'})
-            
-            }
+            {...register("name", { required: "El nombre del paciente es obligatorio" })}
           />
-          {errors.name?.message}
+          {errors.name?.message && <Errors>{errors.name?.message}</Errors>}
         </div>
 
         <div className="mb-5">
@@ -90,10 +92,9 @@ const onSubmit=()=>{
 
 export default PatientForm;
 
-
 /*
   Usamos la libreria react-hook-form-->> se instala npm install react-hook-form. Leer la documentacion
-
+  Creamos un componente para el manejo de errores.
 
 
 
