@@ -5,7 +5,7 @@
 // }
 
 const Error = ({ children }: { children: React.ReactNode }) => {
-  return <p className="bg-red-500 text-white p-3 text-center">{children}</p>;
+  return <p className="bg-red-600 text-white my-4 font-bold uppercase p-3 text-center text-sm">{children}</p>;
 };
 
 export default Error;

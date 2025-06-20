@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
-import Errors from "./Error";
+import Error from "./Error";
+
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -8,7 +9,6 @@ const PatientForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  console.log(errors);
 
   const onSubmit = () => {
     console.log("enviando...");
@@ -35,7 +35,7 @@ const PatientForm = () => {
             /* hook-form */
             {...register("name", { required: "El nombre del paciente es obligatorio" })}
           />
-          {errors.name?.message && <Errors>{errors.name?.message}</Errors>}
+          {errors.name && <Error>{errors.name.message?.toString()}</Error>}
         </div>
 
         <div className="mb-5">
@@ -47,7 +47,10 @@ const PatientForm = () => {
             className="w-full p-3  border border-gray-100"
             type="text"
             placeholder="Nombre del Propietario"
+            //hook-form
+            {...register('caretaker', { required:'El nombre del propietario es obligatorio' })}
           />
+          {errors.caretaker && <Error>{errors.caretaker.message?.toString()}</Error>}
         </div>
 
         <div className="mb-5">
@@ -94,7 +97,8 @@ export default PatientForm;
 
 /*
   Usamos la libreria react-hook-form-->> se instala npm install react-hook-form. Leer la documentacion
-  Creamos un componente para el manejo de errores.
+  Creamos un componente para el manejo de errores. 
+  Vemos que Ts se queja por el type de errors.name.message por eso lo convertimos a toString()
 
 
 
