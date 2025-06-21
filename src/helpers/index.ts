@@ -1,0 +1,1 @@
+export const getInputClasses = (hasError:boolean)=> `w-full p-3  border border-gray-100 ${hasError ? "bg-red-500" : ''}`

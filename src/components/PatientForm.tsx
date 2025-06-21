@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import Error from "./Error";
-
+import { getInputClasses } from "../helpers";
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -9,6 +9,8 @@ const PatientForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const errorMessage: string = "Todos los campos son obligatorios";
 
   const onSubmit = () => {
     console.log("enviando...");
@@ -24,18 +26,18 @@ const PatientForm = () => {
 
       <form className="bg-white shadow-md rounded-lg py-10 px-5 mb-10" noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">
+          {Object.values(errors).length > 0 && <Error>{errorMessage}</Error>}
           <label htmlFor="name" className="text-sm uppercase font-bold">
             Paciente
           </label>
           <input
             id="name"
-            className="w-full p-3  border border-gray-100"
+            className={getInputClasses(!!errors.name)} //el double ban !! se usa para convertir a boolean un valor
             type="text"
             placeholder="Nombre del Paciente"
             /* hook-form */
-            {...register("name", { required: "El nombre del paciente es obligatorio" })}
+            {...register("name", { required: true })}
           />
-          {errors.name && <Error>{errors.name.message?.toString()}</Error>}
         </div>
 
         <div className="mb-5">
@@ -44,13 +46,12 @@ const PatientForm = () => {
           </label>
           <input
             id="caretaker"
-            className="w-full p-3  border border-gray-100"
+            className={getInputClasses(!!errors.caretaker)}
             type="text"
             placeholder="Nombre del Propietario"
             //hook-form
-            {...register('caretaker', { required:'El nombre del propietario es obligatorio' })}
+            {...register("caretaker", { required: true })}
           />
-          {errors.caretaker && <Error>{errors.caretaker.message?.toString()}</Error>}
         </div>
 
         <div className="mb-5">
@@ -59,17 +60,31 @@ const PatientForm = () => {
           </label>
           <input
             id="email"
-            className="w-full p-3  border border-gray-100"
+            className={getInputClasses(!!errors.email)}
             type="email"
             placeholder="Email de Registro"
+            //hook-form
+            {...register("email", {
+              required: true,
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Email No Válido",
+              },
+            })}
           />
+          {errors.email?.message && <Error>{errors.email.message.toString()}</Error>}
         </div>
 
         <div className="mb-5">
           <label htmlFor="date" className="text-sm uppercase font-bold">
             Fecha Alta
           </label>
-          <input id="date" className="w-full p-3  border border-gray-100" type="date" />
+          <input
+            id="date"
+            className={getInputClasses(!!errors.date)}
+            type="date"
+            {...register("date", { required: true })}
+          />
         </div>
 
         <div className="mb-5">
@@ -78,8 +93,9 @@ const PatientForm = () => {
           </label>
           <textarea
             id="symptoms"
-            className="w-full p-3  border border-gray-100"
+            className={getInputClasses(!!errors.symptoms)}
             placeholder="Síntomas del paciente"
+            {...register("symptoms", { required: true })}
           ></textarea>
         </div>
 
@@ -99,6 +115,8 @@ export default PatientForm;
   Usamos la libreria react-hook-form-->> se instala npm install react-hook-form. Leer la documentacion
   Creamos un componente para el manejo de errores. 
   Vemos que Ts se queja por el type de errors.name.message por eso lo convertimos a toString()
+
+
 
 
 
