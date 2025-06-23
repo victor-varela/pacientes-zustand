@@ -20,3 +20,11 @@ function App() {
 }
 
 export default App;
+
+/*
+  Este proyecto es para implementar Zustand. Zustand se basa en un "STORE" que es lo mismo que un REDUCER, piensa en el Store como el Reducer donde estan las funciones que modifican el state. Se crea el archivo en store.ts (antes creabamos la carpeta reducer y el archivo reducer.ts o tsx)
+
+
+
+
+*/

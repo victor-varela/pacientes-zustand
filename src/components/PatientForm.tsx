@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import Error from "./Error";
 import { getInputClasses } from "../helpers";
+import type { DraftPatient } from "../types";
+import { usePatientStore } from "../store";
+
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -8,12 +11,17 @@ const PatientForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset
+  } = useForm<DraftPatient>();
 
   const errorMessage: string = "Todos los campos son obligatorios";
+  //Instanciamos la custom hook de Zustand
+  const addPatient = usePatientStore((state)=>state.addPatient) //sintaxis de la doc de zustand
 
-  const onSubmit = () => {
-    console.log("enviando...");
+  const onSubmit = (data:DraftPatient) => {
+    addPatient(data)
+    reset()
+    
   };
   return (
     <div className="md:w-1/2 lg:w-2/5 mx-5">
@@ -72,7 +80,7 @@ const PatientForm = () => {
               },
             })}
           />
-          {errors.email?.message && <Error>{errors.email.message.toString()}</Error>}
+          {errors.email?.message && <Error>{errors.email.message}</Error>}
         </div>
 
         <div className="mb-5">
@@ -114,9 +122,9 @@ export default PatientForm;
 /*
   Usamos la libreria react-hook-form-->> se instala npm install react-hook-form. Leer la documentacion
   Creamos un componente para el manejo de errores. 
-  Vemos que Ts se queja por el type de errors.name.message por eso lo convertimos a toString()
+  Vemos que Ts se queja por el type de errors.name.message por eso lo convertimos a toString(), OJO cuando ya esta asignado el type a los campos del formulario, no es necesario el .toString() porque lo toma desde el mismo type, ya Ts sabe cual es el type de cada campo.
 
-
+  Para conectar con el store usamos la custom hook usePatientStore que es la que tiene el state y las 'actions', lo recuperamos segun la documentacion de zustand
 
 
 
