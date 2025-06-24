@@ -4,10 +4,12 @@ import type { DraftPatient, Patient } from "./types";
 type PatientState = {
   patients: Patient[];
   addPatient: (data: DraftPatient) => void;
+  deletePatient: (id: Patient["id"]) => void;
 };
 
 export const usePatientStore = create<PatientState>(set => ({
   patients: [],
+
   addPatient: data => {
     const newPatient = { ...data, id: crypto.randomUUID() };
 
@@ -16,6 +18,11 @@ export const usePatientStore = create<PatientState>(set => ({
     }));
   },
 
+  deletePatient: id => {
+    set(state=>({
+      patients: state.patients.filter(patient=> patient.id !== id)
+    }))
+  },
 }));
 
 /*

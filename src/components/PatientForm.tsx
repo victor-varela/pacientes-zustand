@@ -15,6 +15,7 @@ const PatientForm = () => {
   } = useForm<DraftPatient>();
 
   const errorMessage: string = "Todos los campos son obligatorios";
+  
   //Instanciamos la custom hook de Zustand
   const addPatient = usePatientStore((state)=>state.addPatient) //sintaxis de la doc de zustand
 
