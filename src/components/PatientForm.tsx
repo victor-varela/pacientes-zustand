@@ -3,7 +3,7 @@ import Error from "./Error";
 import { getInputClasses } from "../helpers";
 import type { DraftPatient } from "../types";
 import { usePatientStore } from "../store";
-
+import { useEffect } from "react";
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -11,18 +11,40 @@ const PatientForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    setValue,
   } = useForm<DraftPatient>();
 
   const errorMessage: string = "Todos los campos son obligatorios";
-  
-  //Instanciamos la custom hook de Zustand
-  const addPatient = usePatientStore((state)=>state.addPatient) //sintaxis de la doc de zustand
 
-  const onSubmit = (data:DraftPatient) => {
-    addPatient(data)
+  //Instanciamos la custom hook de Zustand
+  const addPatient = usePatientStore(state => state.addPatient); //sintaxis de la doc de zustand
+  const { patientId, patients, editPatient } = usePatientStore(); //otra forma de recuperar un state, con destructuring
+
+  //UseEffect para chequear si hay patientId y estamos editando
+  useEffect(() => {
+    if (patientId) {
+      const patientEdition = patients.find(patient => patient.id === patientId);
+
+      if (patientEdition) {
+        //Usamos la funcion setValue de hook-form para pasar el valor a cada input dependiendo del nombre que le dimos en register
+        setValue("name", patientEdition?.name);
+        setValue("caretaker", patientEdition?.caretaker);
+        setValue("date", patientEdition?.date);
+        setValue("symptoms", patientEdition?.symptoms);
+        setValue("email", patientEdition?.email);
+      }
+    }
+  }, [patientId]);
+
+  const onSubmit = (data: DraftPatient) => {
+    if (patientId) {
+      editPatient(data);
+   
+    } else {
+      addPatient(data);
+    }
     reset()
-    
   };
   return (
     <div className="md:w-1/2 lg:w-2/5 mx-5">
@@ -126,6 +148,8 @@ export default PatientForm;
   Vemos que Ts se queja por el type de errors.name.message por eso lo convertimos a toString(), OJO cuando ya esta asignado el type a los campos del formulario, no es necesario el .toString() porque lo toma desde el mismo type, ya Ts sabe cual es el type de cada campo.
 
   Para conectar con el store usamos la custom hook usePatientStore que es la que tiene el state y las 'actions', lo recuperamos segun la documentacion de zustand
+
+  -Para editar un paciente: usamo useEffect para chequear si hay un patientID activo.
 
 
 

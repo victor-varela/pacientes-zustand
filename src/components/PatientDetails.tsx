@@ -11,6 +11,7 @@ const PatientDetails = ({ patient }: PatientDetailsProps) => {
 
 //Instanciamos la custom hook de Zustand
 const deletePatient = usePatientStore(state => state.deletePatient);
+const getPatient = usePatientStore(state=>state.getPatient)
   return (
     <div className="bg-white shadow-lg rounded-xl mx-5 my-5 px-5 py-5">
       <PatienteDetailsItem label="Id" data={patient.id} />
@@ -19,15 +20,16 @@ const deletePatient = usePatientStore(state => state.deletePatient);
       <PatienteDetailsItem label="Email" data={patient.email} />
       <PatienteDetailsItem label="Fecha Alta" data={patient.date.toString()} />
       <PatienteDetailsItem label="Sintomas" data={patient.symptoms} />
-      <div className="flex justify-between mt-10">
+      <div className="flex flex-col w-1/2 lg:w-full lg:flex-row gap-3 justify-between mt-10">
         <button
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-10 uppercase py-2 rounded-lg "
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-10 uppercase py-2 rounded-lg cursor-pointer"
           type="button"
+          onClick={()=>getPatient(patient)}
         >
           Editar
         </button>
         <button
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-2 uppercase rounded-lg "
+          className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-2 uppercase rounded-lg cursor-pointer "
           type="button"
           onClick={()=>deletePatient(patient.id)}
         >

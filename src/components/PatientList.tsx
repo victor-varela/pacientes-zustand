@@ -3,7 +3,7 @@ import PatientDetails from "./PatientDetails";
 
 const PatientList = () => {
   const patients = usePatientStore(state => state.patients); //recuperamos patients desde el store
-  console.log(patients);
+
 
   return (
     <div className="md:w-1/2 lg:w-3/5 md:h-screen overflow-y-scroll">
@@ -35,6 +35,8 @@ export default PatientList;
 
 /*
   Por cada elemento del array de pacientes mostramos el componente PatientDetails, por eso el .map de esa forma! 
+
+
 
 
 */
