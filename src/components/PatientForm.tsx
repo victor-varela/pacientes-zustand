@@ -3,7 +3,7 @@ import Error from "./Error";
 import { getInputClasses } from "../helpers";
 import type { DraftPatient } from "../types";
 import { usePatientStore } from "../store";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -21,7 +21,8 @@ const PatientForm = () => {
   const addPatient = usePatientStore(state => state.addPatient); //sintaxis de la doc de zustand
   const { patientId, patients, editPatient } = usePatientStore(); //otra forma de recuperar un state, con destructuring
 
-  //UseEffect para chequear si hay patientId y estamos editando
+  //UseEffect para chequear si hay patientId y estamos editando. Usamos el hook useRef para crear el scroll automatico al llenar el formulario
+  const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (patientId) {
       const patientEdition = patients.find(patient => patient.id === patientId);
@@ -34,17 +35,17 @@ const PatientForm = () => {
         setValue("symptoms", patientEdition?.symptoms);
         setValue("email", patientEdition?.email);
       }
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [patientId]);
 
   const onSubmit = (data: DraftPatient) => {
     if (patientId) {
       editPatient(data);
-   
     } else {
       addPatient(data);
     }
-    reset()
+    reset();
   };
   return (
     <div className="md:w-1/2 lg:w-2/5 mx-5">
@@ -55,7 +56,12 @@ const PatientForm = () => {
         <span className="text-indigo-600 font-bold">Administralos</span>
       </p>
 
-      <form className="bg-white shadow-md rounded-lg py-10 px-5 mb-10" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+        ref={formRef}
+      >
         <div className="mb-5">
           {Object.values(errors).length > 0 && <Error>{errorMessage}</Error>}
           <label htmlFor="name" className="text-sm uppercase font-bold">
