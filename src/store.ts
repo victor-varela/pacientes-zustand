@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { DraftPatient, Patient } from "./types";
 import { toast } from "react-toastify";
+import { persist } from "zustand/middleware";
 
 type PatientState = {
   patients: Patient[];
@@ -13,8 +14,11 @@ type PatientState = {
 };
 
 export const usePatientStore = create<PatientState>()(
-  devtools(set => ({
+  devtools(
+  persist((set) => ({
+
     patients: [],
+    patientId:'',
 
     addPatient: data => {
       const newPatient = { ...data, id: crypto.randomUUID() };
@@ -51,8 +55,12 @@ export const usePatientStore = create<PatientState>()(
         patientId: "",
       }));
     },
-  }))
-);
+
+  }), {
+    name:'patient-storage'
+  })
+
+));
 
 /*
  La sintaxis la puedes ver en la documentacion, es una funcion que retorna un objeto npm zustand. Se declara dentro de esa funcion que se llama useMyStore tanto los states como las 'actions' que usabamos en un reducer. El type lo declaras como generic useMyStore<SoreType> no necesita provider, boilerplate, actions, etc.. es muy muy corto el codigo. Se usa la palabra set para recuperar y escribir en el state. Lo que era antes en los actions del reducer : ' return{...state, y escribiamos en el state} ahora lo hace el set((state)=>{
@@ -60,9 +68,12 @@ export const usePatientStore = create<PatientState>()(
    
 
 
- -DevTools: para usar devtools, hay que importarlo de zustand/middelware y luego llamar a esa funcion devtools en la CREACION del STORE.
+ -DevTools: para usar devtools (y ver el state en el navegador como react-components), hay que importarlo de zustand/middelware y luego llamar a esa funcion devtools en la CREACION del STORE.
       eje: export const useMyStore = create<myStoreType>()(devtools(set=>({
       
                                                                       
                                                                         }))) nota que despues de set es ({}) parentesis 'llamado a la funcion' y retorna un adivina que?... OBJETO! si señor!
+
+
+  -Persist: es para almacenar en localStorage, hay que abrir parentesis y dentro de las llaves colocar el nombre en local storage (,{name:'patient-storage'}), es asi: persist( el parentesis que cierra es despues del set)                                                                       
 */

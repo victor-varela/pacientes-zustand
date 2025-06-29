@@ -43,7 +43,7 @@ const PatientForm = () => {
   const onSubmit = (data: DraftPatient) => {
     if (patientId) {
       editPatient(data);
-      toast(`Paciente ${patientEdition?.name} editado correctamente`, { type: "success" });
+      toast.success(`Paciente ${patientEdition?.name} actualizado correctamente`);
     } else {
       addPatient(data);
       //Llamamos la funcion toast para mostrar el toast
@@ -143,7 +143,7 @@ const PatientForm = () => {
         <input
           type="submit"
           className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-          value="Guardar Paciente"
+          value={patientId ? 'Editar' : 'Guardar Paciente'}
         />
       </form>
     </div>
