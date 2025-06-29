@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { DraftPatient, Patient } from "./types";
+import { toast } from "react-toastify";
 
 type PatientState = {
   patients: Patient[];
@@ -25,9 +26,15 @@ export const usePatientStore = create<PatientState>()(
     },
 
     deletePatient: id => {
-      set(state => ({
-        patients: state.patients.filter(patient => patient.id !== id),
-      }));
+      set(state => {
+        const patient = state.patients.find(pat => pat.id === id);
+
+        toast(`Paciente ${patient?.name} eliminado correctamente`, { type: "warning" });
+
+        return {
+          patients: state.patients.filter(pat => pat.id !== id),
+        };
+      });
     },
 
     getPatient: data => {

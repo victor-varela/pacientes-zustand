@@ -4,6 +4,7 @@ import { getInputClasses } from "../helpers";
 import type { DraftPatient } from "../types";
 import { usePatientStore } from "../store";
 import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 
 const PatientForm = () => {
   // instaciamos react-hook-form. useForm()
@@ -13,6 +14,7 @@ const PatientForm = () => {
     formState: { errors },
     reset,
     setValue,
+    getValues,
   } = useForm<DraftPatient>();
 
   const errorMessage: string = "Todos los campos son obligatorios";
@@ -23,12 +25,11 @@ const PatientForm = () => {
 
   //UseEffect para chequear si hay patientId y estamos editando. Usamos el hook useRef para crear el scroll automatico al llenar el formulario
   const formRef = useRef<HTMLFormElement>(null);
+  const patientEdition = patients.find(patient => patient.id === patientId);
   useEffect(() => {
     if (patientId) {
-      const patientEdition = patients.find(patient => patient.id === patientId);
-
       if (patientEdition) {
-        //Usamos la funcion setValue de hook-form para pasar el valor a cada input dependiendo del nombre que le dimos en register
+        //Usamos la funcion setValue del hook-form para pasar el valor a cada input dependiendo del nombre que le dimos en register
         setValue("name", patientEdition?.name);
         setValue("caretaker", patientEdition?.caretaker);
         setValue("date", patientEdition?.date);
@@ -42,8 +43,11 @@ const PatientForm = () => {
   const onSubmit = (data: DraftPatient) => {
     if (patientId) {
       editPatient(data);
+      toast(`Paciente ${patientEdition?.name} editado correctamente`, { type: "success" });
     } else {
       addPatient(data);
+      //Llamamos la funcion toast para mostrar el toast
+      toast(`Paciente ${getValues("name")} agregado correctamente`, { type: "success" }); //nos valemos de la funcion getValues del hook-form para obtener el valor del input con el nombre que queremos
     }
     reset();
   };
